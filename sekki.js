@@ -6,6 +6,8 @@ const sekki = (function(){
   // toolbar - canvas element
   let toolbar = [];
 
+  let i = 0;
+
   // app - canvas element
   let app = [];
 
@@ -21,7 +23,7 @@ const sekki = (function(){
   }
 
   const draw = () => {
-    let ctx = app[0].ctx;
+    /* let ctx = app[0].ctx;
     let appSettings = app[0];
     ctx.clearRect(0,0, appSettings.width,appSettings.height);
     for(let i = 0; i < objects.length; i++) {
@@ -30,7 +32,37 @@ const sekki = (function(){
       ctx.fill();
       ctx.stroke();
     }
+    */
+  }
+  const mouseEvents = () => {
 
+    if(i === 1) {
+      drawingMouse(i);
+    }
+
+    document.onmousedown = function(e) {
+      i = 1;
+    }
+    document.onmouseup = function() {
+      i = 0;
+    }
+  }
+
+  const drawingMouse = (i) => {
+    ctx = app[0].ctx;
+    if(i) {
+      document.onmousemove = function(e) {
+        ctx.beginPath();
+        ctx.arc(e.clientX, e.clientY - app[0].canvas.getBoundingClientRect().top, 5, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke();
+      /*  objects.push({
+          "x":e.clientX,
+          "y":e.clientY - app[0].canvas.getBoundingClientRect().top,
+          "radius":20
+        }); */
+      }
+    }
   }
 
   return {
@@ -55,10 +87,12 @@ const sekki = (function(){
         return _callback('canvas do not found');
       }
 
+      setInterval(mouseEvents,1000/480);
+
       console.log(toolbar);
 
       setUpTools();
-      setInterval(draw,1000/30);
+      //setInterval(draw,1000/60);
 
       return this;
     },
