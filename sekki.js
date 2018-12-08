@@ -18,51 +18,57 @@ const sekki = (function(){
     "radius":20
   }];
 
+// set up the palette
   const setUpTools = () => {
+    for (var r = 0, max = 4; r <= max; r++) {
+      for (var g = 0; g <= max; g++) {
+        for (var b = 0; b <= max; b++) {
+          var paletteBlock = document.createElement('div');
+          paletteBlock.className = 'button';
+          paletteBlock.addEventListener('click', function changeColor(e) {
+            app[0].ctx.strokeStyle = e.target.style.backgroundColor;
+          });
 
-  }
-
-  const draw = () => {
-    /* let ctx = app[0].ctx;
-    let appSettings = app[0];
-    ctx.clearRect(0,0, appSettings.width,appSettings.height);
-    for(let i = 0; i < objects.length; i++) {
-      ctx.beginPath();
-      ctx.arc(objects[i].x, objects[i].y, objects[i].radius, 0, 2 * Math.PI);
-      ctx.fill();
-      ctx.stroke();
-    }
-    */
-  }
-  const mouseEvents = () => {
-
-    if(i === 1) {
-      drawingMouse(i);
-    }
-
-    document.onmousedown = function(e) {
-      i = 1;
-    }
-    document.onmouseup = function() {
-      i = 0;
-    }
-  }
-
-  const drawingMouse = (i) => {
-    ctx = app[0].ctx;
-    if(i) {
-      document.onmousemove = function(e) {
-        ctx.beginPath();
-        ctx.arc(e.clientX, e.clientY - app[0].canvas.getBoundingClientRect().top, 5, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.stroke();
-      /*  objects.push({
-          "x":e.clientX,
-          "y":e.clientY - app[0].canvas.getBoundingClientRect().top,
-          "radius":20
-        }); */
+          paletteBlock.style.backgroundColor = (
+            'rgb(' + Math.round(r * 255 / max) + ", "
+            + Math.round(g * 255 / max) + ", "
+            + Math.round(b * 255 / max) + ")"
+          );
+          let palite = document.getElementById('palite');
+          palite.appendChild(paletteBlock);
+        }
       }
     }
+  }
+
+// method to realize mouse events
+  const mouseEvents = () => {
+    app[0].canvas.onmousemove = function(e) {
+        if(e.buttons > 0) {
+          drawingMouse(e);
+        }
+    }
+  }
+
+// method to realize keyboard events
+  const keyboardEvents = () => {
+    document.onkeydown = function(e) {
+      if(e.keyCode === 67) {
+         //sekki.canvasClear(app);
+         app[0].ctx.clearRect(0,0, app[0].canvas.width,app[0].canvas.height);
+      }
+    }
+  }
+// drawing by mouse when any mouse button is pressed
+  const drawingMouse = (e) => {
+    ctx = app[0].ctx;
+        ctx.lineCap = "round";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX,e.offsetY);
+        ctx.lineTo(e.offsetX - e.movementX, e.offsetY - e.movementY);
+        ctx.stroke();
+        ctx.closePath();
   }
 
   return {
@@ -86,11 +92,8 @@ const sekki = (function(){
       if(!sekki.isEmpty(toolbar) || !sekki.isEmpty(appCanvas)) {
         return _callback('canvas do not found');
       }
-
-      setInterval(mouseEvents,1000/480);
-
-      console.log(toolbar);
-
+      mouseEvents();
+      keyboardEvents();
       setUpTools();
       //setInterval(draw,1000/60);
 
@@ -132,6 +135,10 @@ const helpers = (function(sekki){
       return true;
     }
     return false;
+  }
+
+  sekki.canvasClear = (app) => {
+    app[0].ctx.clearRect(0,0, app[0].canvas.width,app[0].canvas.height);
   }
 
   return sekki;

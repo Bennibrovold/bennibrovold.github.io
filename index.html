@@ -10,15 +10,32 @@
   body {
     width: 550px;
   }
+  .button {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin: 2px;
+    border: 1px solid black;
+  }
+
+  .palitra {
+    width: 601px;
+    height: 80px;
+  }
+
+  #app {
+    border: 2px solid #cdcdcd;
+  }
 
  canvas {
   float:left;
  }
 </style>
 <body>
+<div class="palitra" id="palite"></div>
 <div id="fps-counter" class="fpscounter" style="position:absolute;left:0;top:0"></div>
-<canvas id="tools" width="600" height="50"></canvas>
 <canvas id="app" width="600" height="500"></canvas>
+<canvas id="tools" width="600" height="50"></canvas>
 <script src="sekki.js"></script>
 <script>
 
